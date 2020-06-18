@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta content="utf-8" http-equiv="encoding" />
+    <style>
+      body {
+        width: 100%;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      .draggable {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+      }
+
+      .red {
+        background-color: red;
+      }
+
+      .blue {
+        background-color: blue;
+      }
+
+      .green {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="draggable red"></div>
+    <div class="draggable blue"></div>
+    <div class="draggable green"></div>
+    <div class="draggable red"></div>
+    <div class="draggable blue"></div>
+    <div class="draggable green"></div>
+
+    <script>
+      window.onload = () => {
+        const draggable = document.querySelectorAll(".draggable");
+        if (draggable.length === 0) {
+          console.error("Unable to find draggable object!");
+        }
+        let selectedElement, clickOffset, maxZIndex = 0;
+        draggable.forEach((element) => {
+          element.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            selectedElement = e.target;
+            clickOffset = [e.layerX, e.layerY];
+            element.style["z-index"] = maxZIndex++;
+          });
+        });
+        document.addEventListener("mouseup", (e) => {
+          e.preventDefault();
+          selectedElement = undefined;
+          clickOffset = undefined;
+        });
+        document.addEventListener("mousemove", (e) => {
+          if (selectedElement !== undefined) {
+            selectedElement.style.top = e.clientY - clickOffset[1];
+            selectedElement.style.left = e.clientX - clickOffset[0];
+          }
+        });
+      };
+    </script>
+  </body>
+</html>
